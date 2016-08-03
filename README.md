@@ -1,2 +1,2 @@
-# wordpess-woocommerce-nextpay-payment-gateway
-wordpess woocommerce by nextpay payment gateway
+# wordpress-woocommerce-nextpay-payment-gateway
+wordpress woocommerce by nextpay payment gateway
