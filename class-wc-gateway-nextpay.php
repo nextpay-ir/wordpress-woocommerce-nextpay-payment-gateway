@@ -31,7 +31,7 @@ function Load_NextPay_Gateway() {
                 $this->title = $this->settings['title'];
                 $this->description = $this->settings['description'];
 
-                $this->merchantcode = $this->settings['merchantcode'];
+                $this->api_key = $this->settings['api_key'];
 
                 $this->success_massage = $this->settings['success_massage'];
                 $this->failed_massage = $this->settings['failed_massage'];
@@ -46,70 +46,70 @@ function Load_NextPay_Gateway() {
             }
 
             public function admin_options() {
-                 
-                 
+
+
                 parent::admin_options();
             }
 
             public function init_form_fields() {
                 $this->form_fields = apply_filters('WC_NextPay_Config', array(
-                    'base_confing' => array(
-                        'title' => __('تنظیمات پایه ای', 'woocommerce'),
-                        'type' => 'title',
-                        'description' => '',
-                    ),
-                    'enabled' => array(
-                        'title' => __('فعالسازی/غیرفعالسازی', 'woocommerce'),
-                        'type' => 'checkbox',
-                        'label' => __('فعالسازی درگاه نکست پی', 'woocommerce'),
-                        'description' => __('برای فعالسازی درگاه پرداخت نکست پی باید چک باکس را تیک بزنید', 'woocommerce'),
-                        'default' => 'yes',
-                        'desc_tip' => true,
-                    ),
-                    'title' => array(
-                        'title' => __('عنوان درگاه', 'woocommerce'),
-                        'type' => 'text',
-                        'description' => __('عنوان درگاه که در طی خرید به مشتری نمایش داده میشود', 'woocommerce'),
-                        'default' => __('پرداخت امن نکست پی', 'woocommerce'),
-                        'desc_tip' => true,
-                    ),
-                    'description' => array(
-                        'title' => __('توضیحات درگاه', 'woocommerce'),
-                        'type' => 'text',
-                        'desc_tip' => true,
-                        'description' => __('توضیحاتی که در طی عملیات پرداخت برای درگاه نمایش داده خواهد شد', 'woocommerce'),
-                        'default' => __('پرداخت امن به وسیله کلیه کارت های عضو شتاب از طریق درگاه نکست پی', 'woocommerce')
-                    ),
-                    'account_confing' => array(
-                        'title' => __('تنظیمات حساب نکست پی', 'woocommerce'),
-                        'type' => 'title',
-                        'description' => '',
-                    ),
-                    'api_key' => array(
-                        'title' => __('کد API', 'woocommerce'),
-                        'type' => 'text',
-                        'description' => __('کد API درگاه نکست پی', 'woocommerce'),
-                        'default' => '',
-                        'desc_tip' => true
-                    ),
-                    'payment_confing' => array(
-                        'title' => __('تنظیمات عملیات پرداخت', 'woocommerce'),
-                        'type' => 'title',
-                        'description' => '',
-                    ),
-                    'success_massage' => array(
-                        'title' => __('پیام پرداخت موفق', 'woocommerce'),
-                        'type' => 'textarea',
-                        'description' => __('متن پیامی که میخواهید بعد از پرداخت موفق به کاربر نمایش دهید را وارد نمایید . همچنین می توانید از شورت کد {transaction_id} برای نمایش کد رهگیری (توکن) نکست پی استفاده نمایید .', 'woocommerce'),
-                        'default' => __('با تشکر از شما . سفارش شما با موفقیت پرداخت شد .', 'woocommerce'),
-                    ),
-                    'failed_massage' => array(
-                        'title' => __('پیام پرداخت ناموفق', 'woocommerce'),
-                        'type' => 'textarea',
-                        'description' => __('متن پیامی که میخواهید بعد از پرداخت ناموفق به کاربر نمایش دهید را وارد نمایید . همچنین می توانید از شورت کد {fault} برای نمایش دلیل خطای رخ داده استفاده نمایید . این دلیل خطا از سایت نکست پی ارسال میگردد .', 'woocommerce'),
-                        'default' => __('پرداخت شما ناموفق بوده است . لطفا مجددا تلاش نمایید یا در صورت بروز اشکال با مدیر سایت تماس بگیرید .', 'woocommerce'),
-                    ),
-                        )
+                        'base_confing' => array(
+                            'title' => __('تنظیمات پایه ای', 'woocommerce'),
+                            'type' => 'title',
+                            'description' => '',
+                        ),
+                        'enabled' => array(
+                            'title' => __('فعالسازی/غیرفعالسازی', 'woocommerce'),
+                            'type' => 'checkbox',
+                            'label' => __('فعالسازی درگاه نکست پی', 'woocommerce'),
+                            'description' => __('برای فعالسازی درگاه پرداخت نکست پی باید چک باکس را تیک بزنید', 'woocommerce'),
+                            'default' => 'yes',
+                            'desc_tip' => true,
+                        ),
+                        'title' => array(
+                            'title' => __('عنوان درگاه', 'woocommerce'),
+                            'type' => 'text',
+                            'description' => __('عنوان درگاه که در طی خرید به مشتری نمایش داده میشود', 'woocommerce'),
+                            'default' => __('پرداخت امن نکست پی', 'woocommerce'),
+                            'desc_tip' => true,
+                        ),
+                        'description' => array(
+                            'title' => __('توضیحات درگاه', 'woocommerce'),
+                            'type' => 'text',
+                            'desc_tip' => true,
+                            'description' => __('توضیحاتی که در طی عملیات پرداخت برای درگاه نمایش داده خواهد شد', 'woocommerce'),
+                            'default' => __('پرداخت امن به وسیله کلیه کارت های عضو شتاب از طریق درگاه نکست پی', 'woocommerce')
+                        ),
+                        'account_confing' => array(
+                            'title' => __('تنظیمات حساب نکست پی', 'woocommerce'),
+                            'type' => 'title',
+                            'description' => '',
+                        ),
+                        'api_key' => array(
+                            'title' => __('کد API', 'woocommerce'),
+                            'type' => 'text',
+                            'description' => __('کد API درگاه نکست پی', 'woocommerce'),
+                            'default' => '1cf9d861-c817-468b-809b-2595625902ac',
+                            'desc_tip' => true
+                        ),
+                        'payment_confing' => array(
+                            'title' => __('تنظیمات عملیات پرداخت', 'woocommerce'),
+                            'type' => 'title',
+                            'description' => '',
+                        ),
+                        'success_massage' => array(
+                            'title' => __('پیام پرداخت موفق', 'woocommerce'),
+                            'type' => 'textarea',
+                            'description' => __('متن پیامی که میخواهید بعد از پرداخت موفق به کاربر نمایش دهید را وارد نمایید . همچنین می توانید از شورت کد {transaction_id} برای نمایش کد رهگیری (توکن) نکست پی استفاده نمایید .', 'woocommerce'),
+                            'default' => __('با تشکر از شما . سفارش شما با موفقیت پرداخت شد .', 'woocommerce'),
+                        ),
+                        'failed_massage' => array(
+                            'title' => __('پیام پرداخت ناموفق', 'woocommerce'),
+                            'type' => 'textarea',
+                            'description' => __('متن پیامی که میخواهید بعد از پرداخت ناموفق به کاربر نمایش دهید را وارد نمایید . همچنین می توانید از شورت کد {fault} برای نمایش دلیل خطای رخ داده استفاده نمایید . این دلیل خطا از سایت نکست پی ارسال میگردد .', 'woocommerce'),
+                            'default' => __('پرداخت شما ناموفق بوده است . لطفا مجددا تلاش نمایید یا در صورت بروز اشکال با مدیر سایت تماس بگیرید .', 'woocommerce'),
+                        ),
+                    )
                 );
             }
 
@@ -130,8 +130,8 @@ function Load_NextPay_Gateway() {
                 $order = new WC_Order($order_id);
                 $currency = $order->get_order_currency();
                 $currency = apply_filters('WC_NextPay_Currency', $currency, $order_id);
-                 
-                 
+
+
                 $form = '<form action="" method="POST" class="nextpay-checkout-form" id="nextpay-checkout-form">
 						<input type="submit" name="nextpay_submit" class="button alt" id="nextpay-payment-button" value="' . __('پرداخت', 'woocommerce') . '"/>
 						<a class="button cancel" href="' . $woocommerce->cart->get_checkout_url() . '">' . __('بازگشت', 'woocommerce') . '</a>
@@ -143,8 +143,8 @@ function Load_NextPay_Gateway() {
                 do_action('WC_NextPay_Gateway_After_Form', $order_id, $woocommerce);
 
                 if (isset($_POST["nextpay_submit"])) {
-                     
-                     
+
+
 
                     $Amount = intval($order->order_total);
                     $Amount = apply_filters('woocommerce_order_amount_total_IRANIAN_gateways_before_check_currency', $Amount, $currency);
@@ -189,8 +189,9 @@ function Load_NextPay_Gateway() {
                     $Email = !filter_var($Email, FILTER_VALIDATE_EMAIL) === false ? $Email : '';
                     $Mobile = preg_match('/^09[0-9]{9}/i', $Mobile) ? $Mobile : '';
 
-                    include_once ("./nextpay_payment.php");
+                    include_once ("nextpay_payment.php");
                     $nextpay = new Nextpay_Payment(array("api_key"=>$Api_key, "amount"=>$Amount, "callback_uri"=>$CallbackUrl));
+                    //$nextpay->setDefaultVerify(Type_Verify::Http);
                     $result = $nextpay->token();
                     if(intval($result->code) == -1)
                         $nextpay->send($result->trans_id);
@@ -223,8 +224,8 @@ function Load_NextPay_Gateway() {
                 $InvoiceNumber = isset($_POST['InvoiceNumber']) ? $_POST['InvoiceNumber'] : '';
 
                 global $woocommerce;
-                 
-                 
+
+
                 if (isset($_GET['wc_order']))
                     $order_id = $_GET['wc_order'];
                 else if ($InvoiceNumber) {
@@ -262,10 +263,10 @@ function Load_NextPay_Gateway() {
 
                             include_once ("./nextpay_payment.php");
                             $nextpay = new Nextpay_Payment();
-                            $result = $nextpay->verify_request(array("api_key"=>$Api_key,"amount"=>$Amount,"trans_id"=>$trans_id));
                             //$nextpay->setApiKey($Api_key);
                             //$nextpay->setTransId($trans_id);
                             //$nextpay->setAmount($Amount);
+                            $result = $nextpay->verify_request(array("api_key"=>$Api_key,"amount"=>$Amount,"trans_id"=>$trans_id));
                             if(intval($result) == 0) {
                                 $Status = 'completed';
                                 $Transaction_ID = $trans_id;
@@ -284,8 +285,8 @@ function Load_NextPay_Gateway() {
 
                         if ($Status == 'completed' && isset($Transaction_ID) && $Transaction_ID != 0) {
                             update_post_meta($order_id, '_transaction_id', $Transaction_ID);
-                             
-                             
+
+
 
                             $order->payment_complete($Transaction_ID);
                             $woocommerce->cart->empty_cart();
@@ -311,8 +312,8 @@ function Load_NextPay_Gateway() {
                         }
                         else {
 
-                             
-                             
+
+
 
                             $tr_id = ( $Transaction_ID && $Transaction_ID != 0 ) ? ('<br/>توکن : ' . $Transaction_ID) : '';
 
@@ -338,8 +339,8 @@ function Load_NextPay_Gateway() {
                         }
                     }
                     else {
-                         
-                         
+
+
                         $Transaction_ID = get_post_meta($order_id, '_transaction_id', true);
 
                         $Notice = wpautop(wptexturize($this->success_massage));
@@ -359,8 +360,8 @@ function Load_NextPay_Gateway() {
                 }
                 else {
 
-                     
-                     
+
+
                     $Fault = __('شماره سفارش وجود ندارد .', 'woocommerce');
                     $Notice = wpautop(wptexturize($this->failed_massage));
                     $Notice = str_replace("{fault}", $Fault, $Notice);

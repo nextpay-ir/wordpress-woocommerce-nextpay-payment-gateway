@@ -5,8 +5,8 @@
  * ID: @FreezeMan
  * Date: 7/29/16
  * Time: 5:05 PM
- * Website:
- * Email:
+ * Website: NextPay.ir
+ * Email: freezeman.0098@gmail.com
  * @copyright 2016
  * @package NextPay_Gateway
  * @version 1.0

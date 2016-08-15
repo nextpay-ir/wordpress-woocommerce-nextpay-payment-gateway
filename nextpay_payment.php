@@ -6,8 +6,8 @@
  * ID: @FreezeMan
  * Date: 7/29/16
  * Time: 5:05 PM
- * Website:
- * Email:
+ * Website: NextPay.ir
+ * Email: freezeman.0098@gmail.com
  * @copyright 2016
  */
 class Nextpay_Payment
@@ -59,26 +59,32 @@ class Nextpay_Payment
                 }
             }
             $this->params = $params;
+            $this->api_key = $params['api_key'];
+            $this->amount = $params['amount'];
+            $this->callback_uri = $params['callback_uri'];
         }
-        if($api_key)
-            $this->api_key = $api_key;
-        //else
-        //    $this->show_error("شناسه مربوط به api مقدار دهی نشده است");
+        else
+        {
+            if($api_key)
+                $this->api_key = $api_key;
+            //else
+            //    $this->show_error("شناسه مربوط به api مقدار دهی نشده است");
 
-        if($amount)
-            $this->amount = $amount;
-        //else
-        //    $this->show_error("مبلغ تعیین نشده است");
+            if($amount)
+                $this->amount = $amount;
+            //else
+            //    $this->show_error("مبلغ تعیین نشده است");
 
-        if($url)
-            $this->callback_uri = $url;
-        //else
-        //    $this->show_error("مسیر بازگشت تعیین نشده است");
+            if($url)
+                $this->callback_uri = $url;
+            //else
+            //    $this->show_error("مسیر بازگشت تعیین نشده است");
 
-        $this->params = array(
-            "api_key"=>$this->api_key,
-            "amount"=>$this->amount,
-            "callback_uri"=>$this->callback_uri);
+            $this->params = array(
+                "api_key"=>$this->api_key,
+                "amount"=>$this->amount,
+                "callback_uri"=>$this->callback_uri);
+        }
     }
 
     /**
@@ -114,7 +120,7 @@ class Nextpay_Payment
             case Type_Verify::NuSoap:
                 try
                 {
-                    include_once ("./include/nusoap/nusoap.php");
+                    include_once ("include/nusoap/nusoap.php");
 
                     $client = new nusoap_client($this->server_soap,'wsdl');
 
@@ -180,8 +186,8 @@ class Nextpay_Payment
                         /*else
                             $this->code_error($res->code);*/
                     }
-                    else
-                        $this->show_error("خطا در پاسخ دهی به درخواست با Curl");
+                    /*else
+                        $this->show_error("خطا در پاسخ دهی به درخواست با Curl");*/
                 }
                 catch (Exception $e){
                     $this->show_error($e->getMessage());
@@ -309,7 +315,7 @@ class Nextpay_Payment
             case Type_Verify::NuSoap:
                 try
                 {
-                    include_once ("./include/nusoap/nusoap.php");
+                    include_once ("include/nusoap/nusoap.php");
 
                     $client = new nusoap_client($this->server_soap,'wsdl');
 
