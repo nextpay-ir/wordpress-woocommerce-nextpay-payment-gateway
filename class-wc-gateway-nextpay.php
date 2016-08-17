@@ -193,6 +193,7 @@ function Load_NextPay_Gateway() {
                     $nextpay = new Nextpay_Payment(array("api_key"=>$Api_key, "amount"=>$Amount, "callback_uri"=>$CallbackUrl));
                     //$nextpay->setDefaultVerify(Type_Verify::Http);
                     $result = $nextpay->token();
+                    var_dump($result);
                     if(intval($result->code) == -1)
                         $nextpay->send($result->trans_id);
                     else {
@@ -261,7 +262,7 @@ function Load_NextPay_Gateway() {
                             else if (strtolower($currency) == strtolower('IRR'))
                                 $Amount = $Amount / 10;
 
-                            include_once ("./nextpay_payment.php");
+                            include_once ("nextpay_payment.php");
                             $nextpay = new Nextpay_Payment();
                             //$nextpay->setApiKey($Api_key);
                             //$nextpay->setTransId($trans_id);
