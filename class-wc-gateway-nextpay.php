@@ -193,7 +193,6 @@ function Load_NextPay_Gateway() {
                     $nextpay = new Nextpay_Payment(array("api_key"=>$Api_key, "amount"=>$Amount, "callback_uri"=>$CallbackUrl));
                     //$nextpay->setDefaultVerify(Type_Verify::Http);
                     $result = $nextpay->token();
-                    var_dump($result);
                     if(intval($result->code) == -1)
                         $nextpay->send($result->trans_id);
                     else {
