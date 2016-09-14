@@ -516,6 +516,14 @@ class Nextpay_Payment
     /**
      * @return string
      */
+    public function getOrderId()
+    {
+        return $this->order_id;
+    }
+
+    /**
+     * @return string
+     */
     public function getCallbackUri()
     {
         return $this->callback_uri;
@@ -553,6 +561,15 @@ class Nextpay_Payment
     {
         $this->api_key = $api_key;
         $this->params['api_key'] = $this->api_key;
+    }
+
+    /**
+     * @param bool|string $order_id
+     */
+    public function setOrderId($order_id)
+    {
+        $this->order_id = $order_id;
+        $this->params['order_id'] = $this->order_id;
     }
 
     /**
