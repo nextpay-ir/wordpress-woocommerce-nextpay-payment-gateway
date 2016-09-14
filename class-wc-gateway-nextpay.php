@@ -173,7 +173,9 @@ function Load_NextPay_Gateway() {
                     }
                     $products = implode(' - ', $products);
 
-                    $Description = 'خرید به شماره سفارش : ' . $order->get_order_number() . ' | خریدار : ' . $order->billing_first_name . ' ' . $order->billing_last_name . ' | محصولات : ' . $products;
+                    $order_id = $order->get_order_number();
+
+                    $Description = 'خرید به شماره سفارش : ' . $order_id . ' | خریدار : ' . $order->billing_first_name . ' ' . $order->billing_last_name . ' | محصولات : ' . $products;
                     $Mobile = get_post_meta($order_id, '_billing_phone', true) ? get_post_meta($order_id, '_billing_phone', true) : '-';
                     $Email = $order->billing_email;
                     $Paymenter = $order->billing_first_name . ' ' . $order->billing_last_name;
@@ -190,7 +192,7 @@ function Load_NextPay_Gateway() {
                     $Mobile = preg_match('/^09[0-9]{9}/i', $Mobile) ? $Mobile : '';
 
                     include_once ("nextpay_payment.php");
-                    $nextpay = new Nextpay_Payment(array("api_key"=>$Api_key, "amount"=>$Amount, "callback_uri"=>$CallbackUrl));
+                    $nextpay = new Nextpay_Payment(array("api_key"=>$Api_key, "order_id"=>$order_id, "amount"=>$Amount, "callback_uri"=>$CallbackUrl));
                     //$nextpay->setDefaultVerify(Type_Verify::Http);
                     $result = $nextpay->token();
                     if(intval($result->code) == -1)
@@ -240,6 +242,7 @@ function Load_NextPay_Gateway() {
                     $order = new WC_Order($order_id);
                     $currency = $order->get_order_currency();
                     $currency = apply_filters('WC_NextPay_Currency', $currency, $order_id);
+                    //$order_id = $order->get_order_number();
 
                     if ($order->status != 'completed') {
 
@@ -266,7 +269,7 @@ function Load_NextPay_Gateway() {
                             //$nextpay->setApiKey($Api_key);
                             //$nextpay->setTransId($trans_id);
                             //$nextpay->setAmount($Amount);
-                            $result = $nextpay->verify_request(array("api_key"=>$Api_key,"amount"=>$Amount,"trans_id"=>$trans_id));
+                            $result = $nextpay->verify_request(array("api_key"=>$Api_key,'order_id'=>$order_id,"amount"=>$Amount,"trans_id"=>$trans_id));
                             if(intval($result) == 0) {
                                 $Status = 'completed';
                                 $Transaction_ID = $trans_id;
