@@ -352,9 +352,9 @@ class Nextpay_Payment
                 try
                 {
                     $soap_client = new SoapClient($this->request_verify_soap, array('encoding' => 'UTF-8'));
-                    $res = $soap_client->PaymentVerifection($this->params);
+                    $res = $soap_client->PaymentVerification($this->params);
 
-                    $res = $res->PaymentVerifectionResult;
+                    $res = $res->PaymentVerificationResult;
 
                     if ($res != "" && $res != NULL && is_object($res)) {
                         $res = $res->code;
@@ -378,7 +378,7 @@ class Nextpay_Payment
                     if ($error)
                         $this->show_error($error);
 
-                    $res = $client->call('PaymentVerifection',array($this->params));
+                    $res = $client->call('PaymentVerification',array($this->params));
 
                     if ($client->fault)
                     {
@@ -394,7 +394,7 @@ class Nextpay_Payment
                         if ($error)
                             $this->show_error($error);
 
-                        $res = $res['PaymentVerifectionResult'];
+                        $res = $res['PaymentVerificationResult'];
 
                         if ($res != "" && $res != NULL && is_array($res)) {
                             $res = $res['code'];
@@ -438,9 +438,9 @@ class Nextpay_Payment
                 try
                 {
                     $soap_client = new SoapClient($this->request_verify_soap, array('encoding' => 'UTF-8'));
-                    $res = $soap_client->PaymentVerifection($this->params);
+                    $res = $soap_client->PaymentVerification($this->params);
 
-                    $res = $res->PaymentVerifectionResult;
+                    $res = $res->PaymentVerificationResult;
 
                     if ($res != "" && $res != NULL && is_object($res)) {
                         $res = $res->code;
