@@ -251,6 +251,7 @@ function Load_NextPay_Gateway() {
                         if ($_POST['trans_id']) {
 
                             $trans_id = $_POST['trans_id'];
+                            $order_id = ($_POST['order_id'] == $order_id) ? $_POST['order_id'] : $order_id;
                             $Api_key = $this->api_key;
                             $Amount = intval($order->order_total);
                             $Amount = apply_filters('woocommerce_order_amount_total_IRANIAN_gateways_before_check_currency', $Amount, $currency);

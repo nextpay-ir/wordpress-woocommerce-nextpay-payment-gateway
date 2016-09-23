@@ -1,13 +1,15 @@
 <?php
 /**
  * Created by NextPay.ir
- * author: FreezeMan
- * ID: @FreezeMan
- * Date: 7/29/16
+ * author: Nextpay Company
+ * ID: @nextpay
+ * Date: 09/22/2016
  * Time: 5:05 PM
  * Website: NextPay.ir
- * Email: freezeman.0098@gmail.com
+ * Email: info@nextpay.ir
  * @copyright 2016
+ * @package NextPay_Gateway
+ * @version 1.0
  */
 class Nextpay_Payment
 {
@@ -41,6 +43,7 @@ class Nextpay_Payment
      */
     public function __construct($params=false, $api_key=false, $order_id=false, $amount=false, $url=false)
     {
+        $trust = true;
         if(is_array($params))
         {
             foreach ($this->keys_for_verify as $key )
@@ -50,21 +53,31 @@ class Nextpay_Payment
                     $error = "<h2>آرایه ارسالی دارای مشکل میباشد.</h2>";
                     $error .= "<h4>نمونه مثال برای آرایه ارسالی.</h4>";
                     $error .= /** @lang text */
-                        "<pre>
-                            array(\"api_key\"=>\"شناسه api\",
-				  \"order_id\"=>\"شماره فاکتور\",
-                                  \"amount\"=>\"مبلغ\",
-                                  \"callback_uri\"=>\"مسیر باگشت\")
+                        "<pre>                        
+                        array(\"api_key\"=>\"شناسه api\",
+                              \"order_id\"=>\"شماره فاکتور\",
+                              \"amount\"=>\"مبلغ\",
+                              \"callback_uri\"=>\"مسیر باگشت\")
 
                         </pre>";
+                    $trust = false;
                     $this->show_error($error);
+                    break;
                 }
             }
-            $this->params = $params;
-            $this->api_key = $params['api_key'];
-            $this->order_id = $params['order_id'];
-            $this->amount = $params['amount'];
-            $this->callback_uri = $params['callback_uri'];
+            if($trust)
+            {
+                $this->params = $params;
+                $this->api_key = $params['api_key'];
+                $this->order_id = $params['order_id'];
+                $this->amount = $params['amount'];
+                $this->callback_uri = $params['callback_uri'];
+            }
+            else
+            {
+                $this->show_error("برای مقدارهی پارامتر ها باید بصورت آرایه اقدام نمایید");
+                exit("End with Error!!!");
+            }
         }
         else
         {
@@ -177,7 +190,7 @@ class Nextpay_Payment
                     if( !$this->cURLcheckBasicFunctions() ) $this->show_error("UNAVAILABLE: cURL Basic Functions");
                     $curl = curl_init();
                     curl_setopt($curl, CURLOPT_URL, $this->server_http);
-                    curl_setopt($curl, CURLOPT_POST, 1);
+                    curl_setopt($curl, CURLOPT_POST, true);
                     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
                     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
                     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -234,13 +247,19 @@ class Nextpay_Payment
     {
         if(isset($trans_id))
         {
-            header('Location: '.$this->request_http."/$trans_id");
-            exit(0);
+            header_remove();
+            ob_clean();
+            if (headers_sent()) {
+                echo "<script> location.replace(\"".$this->request_http."/$trans_id"."\"); </script>";
+            }
+            else
+            {
+                header('Location: '.$this->request_http."/$trans_id");
+                exit(0);
+            }
         }
         else
-        {
             $this->show_error("empty trans_id param send");
-        }
     }
 
     /**
@@ -254,6 +273,7 @@ class Nextpay_Payment
     public function verify_request($params=false, $api_key=false, $order_id=false, $trans_id=false, $amount=false)
     {
         $res = 0;
+        $trust = true;
         if(is_array($params))
         {
             foreach ($this->keys_for_check as $key )
@@ -270,22 +290,29 @@ class Nextpay_Payment
                                   \"trans_id\"=>\"شماره تراکنش\")
 
                         </pre>";
+                    $trust = false;
                     $this->show_error($error);
+                    break;
                 }
             }
-
-            $this->trans_id = $params['trans_id'];
-            $this->api_key = $params['api_key'];
-            $this->order_id = $params['order_id'];
-            $this->amount = $params['amount'];
-
+            if($trust)
+            {
+                $this->trans_id = $params['trans_id'];
+                $this->api_key = $params['api_key'];
+                $this->order_id = $params['order_id'];
+                $this->amount = $params['amount'];
+            }
+            else
+            {
+                $this->show_error("برای مقدارهی پارامتر ها باید بصورت آرایه اقدام نمایید");
+                exit("End with Error!!!");
+            }
         }
 
         if($api_key){
             $this->api_key = $api_key;
             $this->params['api_key'] = $api_key;
-        }elseif ($this->api_key){
-            $this->api_key = $this->api_key;
+        }elseif (isset($this->api_key)) {
             $this->params['api_key'] = $this->api_key;
         }
         //else
@@ -294,8 +321,7 @@ class Nextpay_Payment
         if($order_id){
             $this->order_id = $order_id;
             $this->params['order_id'] = $order_id;
-        }elseif ($this->order_id){
-            $this->order_id = $this->order_id;
+        }elseif (isset($this->order_id)){
             $this->params['order_id'] = $this->order_id;
         }
         //else
@@ -304,8 +330,7 @@ class Nextpay_Payment
         if($amount){
             $this->amount = $amount;
             $this->params['amount'] = $amount;
-        }elseif ($this->amount){
-            $this->amount = $this->amount;
+        }elseif (isset($this->amount)){
             $this->params['amount'] = $this->amount;
         }
         //else
@@ -314,8 +339,7 @@ class Nextpay_Payment
         if($trans_id){
             $this->trans_id = $trans_id;
             $this->params['trans_id'] = $trans_id;
-        }elseif ($this->trans_id){
-            $this->trans_id = $this->trans_id;
+        }elseif (isset($this->trans_id)){
             $this->params['trans_id'] = $this->trans_id;
         }
         //else
@@ -333,7 +357,6 @@ class Nextpay_Payment
                     $res = $res->PaymentVerifectionResult;
 
                     if ($res != "" && $res != NULL && is_object($res)) {
-                        //$this->code_error($res->code);
                         $res = $res->code;
                     }
                     else
@@ -374,10 +397,6 @@ class Nextpay_Payment
                         $res = $res['PaymentVerifectionResult'];
 
                         if ($res != "" && $res != NULL && is_array($res)) {
-                            /*if (intval($res['code']) == -1)
-                                $this->trans_id = $res['trans_id'];
-                            else
-                                $this->code_error($res['code']);*/
                             $res = $res['code'];
                         }
                         else
@@ -406,11 +425,6 @@ class Nextpay_Payment
                     curl_close ($curl);
 
                     if ($res != "" && $res != NULL && is_object($res)) {
-
-                        /*if (intval($res->code) == -1)
-                            $this->trans_id = $res->trans_id;
-                        else
-                            $this->code_error($res->code);*/
                         $res = $res->code;
                     }
                     else
@@ -429,7 +443,6 @@ class Nextpay_Payment
                     $res = $res->PaymentVerifectionResult;
 
                     if ($res != "" && $res != NULL && is_object($res)) {
-                        //$this->code_error($res->code);
                         $res = $res->code;
                     }
                     else
@@ -595,30 +608,44 @@ class Nextpay_Payment
      */
     public function setParams($params)
     {
+        $trust = true;
         if(is_array($params))
         {
-            foreach ($this->keys_param as $key )
+            if (isset($this->keys_for_verify))
             {
-                if(!array_key_exists($key,$params))
+                foreach ($this->keys_for_verify as $key )
                 {
-                    $error = "<h2>آرایه ارسالی دارای مشکل میباشد.</h2>";
-                    $error .= "<h4>نمونه مثال برای آرایه ارسالی.</h4>";
-                    $error .= /** @lang text */
-                        "<pre>
-                            array(\"api_key\"=>\"شناسه api\",
-                                  \"order_id\"=>\"شماره فاکتور\",
-                                  \"amount\"=>\"مبلغ\",
-                                  \"callback_uri\"=>\"مسیر باگشت\")
-
-                        </pre>";
-                    $this->show_error($error);
+                    if(!array_key_exists($key,$params))
+                    {
+                        $trust = false;
+                        $error = "<h2>آرایه ارسالی دارای مشکل میباشد.</h2>";
+                        $error .= "<h4>نمونه مثال برای آرایه ارسالی.</h4>";
+                        $error .= /** @lang text */
+                            "<pre>
+                                array(\"api_key\"=>\"شناسه api\",
+                                      \"order_id\"=>\"شماره فاکتور\",
+                                      \"amount\"=>\"مبلغ\",
+                                      \"callback_uri\"=>\"مسیر باگشت\")
+    
+                            </pre>";
+                        $this->show_error($error);
+                        break;
+                    }
                 }
             }
-            $this->params = $params;
-            $this->api_key = $params['api_key'];
-            $this->order_id = $params['order_id'];
-            $this->amount = $params['amount'];
-            $this->callback_uri = $params['callback_uri'];
+            else
+                $this->show_error("برای مقدارهی پارامتر ها باید بصورت آرایه اقدام نمایید");
+            if($trust)
+            {
+                $this->params = $params;
+                $this->api_key = $params['api_key'];
+                $this->order_id = $params['order_id'];
+                $this->amount = $params['amount'];
+                $this->callback_uri = $params['callback_uri'];
+            }
+            else
+                $this->show_error("برای مقدارهی پارامتر ها باید بصورت آرایه اقدام نمایید");
+
         }
         else
             $this->show_error("برای مقدارهی پارامتر ها باید بصورت آرایه اقدام نمایید");
