@@ -271,7 +271,7 @@ function Load_Nextpay_Gateway() {
                         $parameters = array
                         (
                             'api_key'	=> $Api_Key,
-                            'order_id'	=> $order_id,
+                            'order_id'	=> $order->get_order_number(),
                             'trans_id' 	=> $Trans_ID,
                             'amount'	=> $Amount,
                         );
