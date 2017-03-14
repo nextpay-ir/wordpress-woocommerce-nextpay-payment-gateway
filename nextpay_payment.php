@@ -19,13 +19,13 @@ class Nextpay_Payment
     public $amount = 0;
     public $trans_id = "";
     public $params = array();
-    public $server_soap = "http://api.nextpay.org/gateway/token.wsdl";
-    //public $server_soap = "http://api.nextpay.org/gateway/token?wsdl";
-    public $server_http = "http://api.nextpay.org/gateway/token.http";
-    public $request_http = "http://api.nextpay.org/gateway/payment";
-    public $request_verify_soap = "http://api.nextpay.org/gateway/verify.wsdl";
-    //public $request_verify_soap = "http://api.nextpay.org/gateway/verify?wsdl";
-    public $request_verify_http = "http://api.nextpay.org/gateway/verify.http";
+    public $server_soap = "https://api.nextpay.org/gateway/token.wsdl";
+    //public $server_soap = "https://api.nextpay.org/gateway/token?wsdl";
+    public $server_http = "https://api.nextpay.org/gateway/token.http";
+    public $request_http = "https://api.nextpay.org/gateway/payment";
+    public $request_verify_soap = "https://api.nextpay.org/gateway/verify.wsdl";
+    //public $request_verify_soap = "https://api.nextpay.org/gateway/verify?wsdl";
+    public $request_verify_http = "https://api.nextpay.org/gateway/verify.http";
     public $callback_uri = "http://example.com";
     private $keys_for_verify = array("api_key","order_id","amount","callback_uri");
     private $keys_for_check = array("api_key","order_id","amount","trans_id");
@@ -467,35 +467,51 @@ class Nextpay_Payment
 
     /**
      * @param int | string $error_code
+     * @return string
      */
     public function code_error($error_code)
     {
         $error_code = intval($error_code);
         $error_array = array(
-            0 => "time ago request payment is complete transaction,please check status only.",
-            -2 => "Bank not response status.",
-            -3 => "pending to payment request.",
-            -4 => "Cancel status trans_id.",
+            0 => "Complete Transaction",
+            -1 => "Default State",
+            -2 => "Bank Failed or Canceled",
+            -3 => "Bank Payment Pendding",
+            -4 => "Bank Canceled",
             -20 => "api key is not send",
             -21 => "empty trans_id param send",
             -22 => "amount in not send",
             -23 => "callback in not send",
-            -30 => "amount less 100 toman",
-            -33 => "api key incorrect type or not exist",
-            -34 => "not exist or not valid transaction",
-            -35 => "api key incorrect type for this request.",
-            -36 => "ResNum from bank not valid to send",
-            -40 => "not active or invalid api key",
-            -41 => "Bank gateway is deactivated",
-            -42 => "system payment has been problem.",
-            -43 => "gateway selection not exist,please reselect bank gateway",
-            -45 => "payment system deactivate temporary",
-            -46 => "No result,wrong request",
-            -55 => "empty trans_id param send"
+            -24 => "amount incorrect",
+            -25 => "trans_id resend and not allow to payment",
+            -26 => "Token not send",
+            -30 => "amount less of limite payment",
+            -32 => "callback error",
+            -33 => "api_key incorrect",
+            -34 => "trans_id incorrect",
+            -35 => "type of api_key incorrect",
+            -36 => "order_id not send",
+            -37 => "transaction not found",
+            -38 => "token not found",
+            -39 => "api_key not found",
+            -40 => "api_key is blocked",
+            -41 => "params from bank invalid",
+            -42 => "payment system problem",
+            -43 => "gateway not found",
+            -44 => "response bank invalid",
+            -45 => "payment system deactived",
+            -46 => "request incorrect",
+            -48 => "commission rate not detect",
+            -49 => "trans repeated",
+            -50 => "account not found",
+            -51 => "user not found"
         );
 
-        echo "<h2>code error : {$error_code}</h2>";
-        echo "<h3>description error : {$error_array[$error_code]}</h3>";
+        if (array_key_exists($error_code, $error_array)) {
+            return $error_array[$error_code];
+        } else {
+            return "error code : $error_code";
+        }
     }
 
     /**
