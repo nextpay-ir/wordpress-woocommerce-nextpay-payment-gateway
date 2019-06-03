@@ -196,7 +196,7 @@ function Load_Nextpay_Gateway() {
                     $result = $nextpay->token();
 
                     if(intval($result->code) == -1){
-                        $Payment_URL = 'http://api.nextpay.org/gateway/payment/' . $result->trans_id;
+                        $Payment_URL = 'https://api.nextpay.org/gateway/payment/' . $result->trans_id;
                         echo 'در حال انتقال به درگاه بانکی  ....';
                         echo "<script type='text/javascript'>window.onload = function () { top.location.href = '" . $Payment_URL . "'; };</script>";
                         exit;
